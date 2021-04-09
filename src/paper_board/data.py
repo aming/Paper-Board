@@ -43,7 +43,7 @@ def update():
     forecast = manager.forecast_at_place(place, 'daily')
     tickers = yfinance.Tickers('^IXIC ^DJI ^SPX')
     data = [
-        '"data-pull" at {}'.format(datetime.now().strftime("%b-%d-%Y %H:%M:%S")),
+        '"data-pull" @{}'.format(datetime.now().strftime("%b-%d %H:%M:%S")),
         '',
         'Current temperature is {}C.'.format(weather.weather.temperature(unit='celsius')['temp']),
         'It is {} now.'.format(weather.weather.detailed_status),

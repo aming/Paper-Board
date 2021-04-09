@@ -1,4 +1,4 @@
-import importlib
+import importlib, os
 from PIL import Image, ImageDraw
 from datetime import datetime
 from . import font
@@ -21,8 +21,9 @@ def render(height, width, title, data):
         data_draw.text((2, y), text, font = main_font, fill = 0)
         y += 50
         i += 1
-    with importlib.resources.path("paper_board.font", 'image.jpg') as img_path:
-        pic_image = Image.open(img_path)
-        pic_image = pic_image.convert('L')
-        data_image.paste(pic_image, (0, 618))
+    if os.path.isfile("paper_board/font/image.jpg"):
+        with importlib.resources.path("paper_board.font", 'image.jpg') as img_path:
+            pic_image = Image.open(img_path)
+            pic_image = pic_image.convert('L')
+            data_image.paste(pic_image, (0, 618))
     return title_image, data_image

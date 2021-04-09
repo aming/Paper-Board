@@ -25,6 +25,7 @@ setuptools.setup(
         'console_scripts': [
             'paper-board=paper_board.command_line:main',
             'pull-data=paper_board.data_puller:main',
+            'render-board=paper_board.data_puller:render',
         ]
     },
     install_requires=[

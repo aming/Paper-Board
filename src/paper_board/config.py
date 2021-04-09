@@ -1,4 +1,4 @@
-import os, configparser, io
+import os, configparser
 
 config_dir = os.path.expanduser("~") + "/.config/paper-board"
 config_file = config_dir + "/config.ini"
