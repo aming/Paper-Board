@@ -1,28 +1,28 @@
-import csv, os
+import csv
 import pyowm
 import yfinance
 from datetime import datetime
 from . import config
 
-DATA_FILE_PATH = os.path.expanduser("~") + '/paper_board_data'
+DATA_FILE_PATH = config.config_dir + '/data'
 DELIMITER = ','
 
-def write_csv_data(data = []):
-    with open(DATA_FILE_PATH, 'w') as file:
+def write_csv_data(data = [], index = 0):
+    with open(DATA_FILE_PATH + "-" + str(index), 'w+') as file:
         writer = csv.writer(file, delimiter=DELIMITER)
         for d in data:
             writer.writerow([d])
 
-def read_csv_data():
+def read_csv_data(index = 0):
     data = []
-    with open(DATA_FILE_PATH, 'r') as file:
+    with open(DATA_FILE_PATH + "-" + str(index), 'r') as file:
         reader = csv.reader(file, delimiter=DELIMITER)
         for row in reader:
             data.append(' '.join(row))
     return data
 
-def get_data():
-    return read_csv_data()
+def get_data(index = 0):
+    return read_csv_data(index)
 
 def get_price(ticker):
     close = ticker.info['previousClose']
@@ -44,19 +44,13 @@ def update():
     tickers = yfinance.Tickers('^IXIC ^DJI ^SPX')
     data = [
         '"data-pull" @{}'.format(datetime.now().strftime("%b-%d %H:%M:%S")),
-        '',
         'Current temperature is {}C.'.format(weather.weather.temperature(unit='celsius')['temp']),
         'It is {} now.'.format(weather.weather.detailed_status),
         'Tomorrow is {}'.format(forecast.get_weather_at(pyowm.utils.timestamps.tomorrow()).detailed_status),
-        '',
         '',
         get_price(tickers.tickers['^IXIC']),
         get_price(tickers.tickers['^DJI']),
         get_price(tickers.tickers['^SPX']),
         '',
-        '',
-        '',
-        '',
-        '',
     ]
-    write_csv_data(data)
+    write_csv_data(data, 0)
