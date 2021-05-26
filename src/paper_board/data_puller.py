@@ -8,7 +8,7 @@ def main():
 
 def render():
     d = data.get_data()
-    red_image, black_image = render_engine.render(528, 880, "My Title", d)
+    red_image, black_image = render_engine.render(528, 880, d)
     image = ImageChops.darker(red_image, black_image)
     image.show()
 
