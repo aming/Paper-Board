@@ -58,10 +58,10 @@ def render(height, width, data):
     logging.warn("Rendering " + str(height) + " x " + str(width) + " image")
     height_ptr=0
     image = Image.new('1', (height, width), 255)  # 255: clear the frame
-    image.paste(render_widget(int(height/2), WIDGET_HEIGHT, data), (0, height_ptr))
-    image.paste(render_widget(int(height/2), WIDGET_HEIGHT, data), (int(height/2), height_ptr))
+    image.paste(render_widget(int(height/2), WIDGET_HEIGHT, data[0]), (0, height_ptr))
+    image.paste(render_widget(int(height/2), WIDGET_HEIGHT, data[1]), (int(height/2), height_ptr))
     height_ptr += WIDGET_HEIGHT
-    image.paste(render_main(height-(MARGIN*2), MAIN_HEIGHT, data), (MARGIN, height_ptr))
+    image.paste(render_main(height-(MARGIN*2), MAIN_HEIGHT, data[2]), (MARGIN, height_ptr))
     height_ptr += MAIN_HEIGHT
     image.paste(render_photo(height-(MARGIN*2), WIDGET_HEIGHT, 'image.jpg'), (MARGIN, height_ptr))
     height_ptr += WIDGET_HEIGHT
