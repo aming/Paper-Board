@@ -3,6 +3,7 @@ import pyowm
 import yfinance
 from datetime import datetime
 from . import config
+from . import gsheet
 
 DATA_FILE_PATH = config.config_dir + '/data'
 DELIMITER = ','
@@ -35,6 +36,17 @@ def get_price(ticker):
         change / close * 100,
     )
 
+def get_gsheet_data():
+    if not 'gsheet' in config.config:
+        return "No GSheet data"
+    gsheet_config=config.config['gsheet']
+    gsheet.init(gsheet_config['credentials_file'])
+    return gsheet.get_cell(
+            gsheet_config['spreadsheet_id'],
+            gsheet_config['sheet_name'],
+            gsheet_config['cell_id'],
+            )
+
 def update():
     place=config.config['weather']['location']
     OpenWMap=pyowm.OWM(config.config['weather']['api_token'])
@@ -52,5 +64,6 @@ def update():
         get_price(tickers.tickers['^DJI']),
         get_price(tickers.tickers['^SPX']),
         '',
+        get_gsheet_data(),
     ]
     write_csv_data(data, 0)
