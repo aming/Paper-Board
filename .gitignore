@@ -1,0 +1,9 @@
+dist/
+.eggs/
+*.egg-info/
+version.py
+
+*.swp
+*.swo
+*.pyc
+*~
