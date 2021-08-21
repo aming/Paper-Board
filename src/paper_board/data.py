@@ -59,11 +59,9 @@ def update():
         'Current temperature is {}C.'.format(weather.weather.temperature(unit='celsius')['temp']),
         'It is {} now.'.format(weather.weather.detailed_status),
         'Tomorrow is {}'.format(forecast.get_weather_at(pyowm.utils.timestamps.tomorrow()).detailed_status),
-        '',
         get_price(tickers.tickers['^IXIC']),
         get_price(tickers.tickers['^DJI']),
         get_price(tickers.tickers['^SPX']),
-        '',
         get_gsheet_data(),
     ]
     write_csv_data(data, 0)
