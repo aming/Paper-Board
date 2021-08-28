@@ -3,6 +3,7 @@ import logging
 from PIL import Image, ImageDraw
 from datetime import datetime
 from . import font
+from . import config
 
 MARGIN=8
 WIDGET_HEIGHT=200
@@ -36,10 +37,9 @@ def render_main(height, width, data):
 def render_photo(height, width, photo_file):
     image = Image.new('1', (height, width), 255)  # 255: clear the frame
     try:
-        with importlib.resources.path("paper_board.font", photo_file) as img_path:
-            pic_image = Image.open(img_path)
-            pic_image = pic_image.convert('L')
-            image.paste(pic_image, (0, 618))
+        pic_image = Image.open(photo_file)
+        pic_image = pic_image.convert('L')
+        image.paste(pic_image, (0, 0))
     except FileNotFoundError:
         f = font.load("Font.ttc", 35)
         draw = ImageDraw.Draw(image)
@@ -63,7 +63,7 @@ def render(height, width, data):
     height_ptr += WIDGET_HEIGHT
     image.paste(render_main(height-(MARGIN*2), MAIN_HEIGHT, data[2]), (MARGIN, height_ptr))
     height_ptr += MAIN_HEIGHT
-    image.paste(render_photo(height-(MARGIN*2), WIDGET_HEIGHT, 'image.jpg'), (MARGIN, height_ptr))
+    image.paste(render_photo(height-(MARGIN*2), WIDGET_HEIGHT, config.config_dir + '/image.jpg'), (MARGIN, height_ptr))
     height_ptr += WIDGET_HEIGHT
     image.paste(render_status_line(height, STATUS_HEIGHT), (0, width-STATUS_HEIGHT))
     return Image.new('1', (height, width), 255), image
