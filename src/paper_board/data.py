@@ -1,6 +1,7 @@
 import csv
 import pyowm
 import yfinance
+import urllib
 from datetime import datetime
 from . import config
 from . import gsheet
@@ -47,21 +48,30 @@ def get_gsheet_data():
             gsheet_config['cell_id'],
             )
 
+def get_weather(index = 0):
+    filename = DATA_FILE_PATH + "-" + str(index)
+    urllib.request.urlretrieve('https://wttr.in/?0ATmQ', filename=filename)
+
 def update():
     place=config.config['weather']['location']
     OpenWMap=pyowm.OWM(config.config['weather']['api_token'])
     manager=OpenWMap.weather_manager()
     weather=manager.weather_at_place(place)
     forecast = manager.forecast_at_place(place, 'daily')
+    data0 = [
+        'data-pull',
+        datetime.now().strftime("%b-%d %H:%M:%S"),
+        '{}C.'.format(weather.weather.temperature(unit='celsius')['temp']),
+        '{}'.format(weather.weather.detailed_status),
+        'Tomorrow: {}'.format(forecast.get_weather_at(pyowm.utils.timestamps.tomorrow()).detailed_status),
+    ]
+    write_csv_data(data0, 0)
+    get_weather(1)
     tickers = yfinance.Tickers('^IXIC ^DJI ^SPX')
-    data = [
-        '"data-pull" @{}'.format(datetime.now().strftime("%b-%d %H:%M:%S")),
-        'Current temperature is {}C.'.format(weather.weather.temperature(unit='celsius')['temp']),
-        'It is {} now.'.format(weather.weather.detailed_status),
-        'Tomorrow is {}'.format(forecast.get_weather_at(pyowm.utils.timestamps.tomorrow()).detailed_status),
+    data2 = [
         get_price(tickers.tickers['^IXIC']),
         get_price(tickers.tickers['^DJI']),
         get_price(tickers.tickers['^SPX']),
         get_gsheet_data(),
     ]
-    write_csv_data(data, 0)
+    write_csv_data(data2, 2)
