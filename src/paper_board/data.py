@@ -42,7 +42,7 @@ def get_gsheet_data():
         return "No GSheet data"
     gsheet_config=config.config['gsheet']
     gsheet.init(gsheet_config['credentials_file'])
-    return gsheet.get_cell(
+    return gsheet.get_range(
             gsheet_config['spreadsheet_id'],
             gsheet_config['sheet_name'],
             gsheet_config['cell_id'],
@@ -67,11 +67,5 @@ def update():
     ]
     write_csv_data(data0, 0)
     get_weather(1)
-    tickers = yfinance.Tickers('^IXIC ^DJI ^SPX')
-    data2 = [
-        get_price(tickers.tickers['^IXIC']),
-        get_price(tickers.tickers['^DJI']),
-        get_price(tickers.tickers['^SPX']),
-        get_gsheet_data(),
-    ]
+    data2 = get_gsheet_data()
     write_csv_data(data2, 2)

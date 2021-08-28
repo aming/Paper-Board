@@ -32,15 +32,15 @@ def get_cred(credentials_file):
             token.write(creds.to_json())
     return creds
 
-def get_range(spreadsheet_id, sheet_range):
+def get_range(spreadsheet_id, sheet_name, sheet_range):
+    range_name = sheet_name + '!' + sheet_range
     service = build('sheets', 'v4', credentials=credentials)
     sheet = service.spreadsheets()
-    result = sheet.values().get(spreadsheetId=spreadsheet_id, range=sheet_range).execute()
+    result = sheet.values().get(spreadsheetId=spreadsheet_id, range=range_name).execute()
     return result.get('values', [])
 
 def get_cell(spreadsheet_id, sheet_name, cell_id):
-    range_name = sheet_name + '!' + cell_id
-    values = get_range(spreadsheet_id, range_name)
+    values = get_range(spreadsheet_id, sheet_name, range_name)
     if not values:
         return "No data found"
     return values[0][0]
