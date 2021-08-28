@@ -6,9 +6,10 @@ from . import font
 from . import config
 
 MARGIN=8
-WIDGET_HEIGHT=200
-MAIN_HEIGHT=400
-STATUS_HEIGHT=40
+WIDGET_HEIGHT=150
+MAIN_HEIGHT=500
+PHOTO_HEIGHT=240
+STATUS_HEIGHT=35
 
 def render_widget(height, width, data):
     size=25
@@ -22,7 +23,7 @@ def render_widget(height, width, data):
     return image
 
 def render_main(height, width, data):
-    f = font.load("Font.ttc", 25)
+    f = font.load("Font.ttc", 22)
     image = Image.new('1', (height, width), 255)  # 255: clear the frame
     draw = ImageDraw.Draw(image)
     y = 0
@@ -30,7 +31,7 @@ def render_main(height, width, data):
     for d in data:
         text = '{0:02d} {1}'.format(i, d)
         draw.text((2, y), text, font = f, fill = 0)
-        y += 50
+        y += 35
         i += 1
     return image
 
@@ -55,15 +56,15 @@ def render_status_line(height, width):
     return image
 
 def render(height, width, data):
-    logging.warn("Rendering " + str(height) + " x " + str(width) + " image")
-    height_ptr=0
+    logging.warn(f"Rendering {height} x {width} image")
     image = Image.new('1', (height, width), 255)  # 255: clear the frame
-    image.paste(render_widget(int(height/2), WIDGET_HEIGHT, data[0]), (0, height_ptr))
-    image.paste(render_widget(int(height/2), WIDGET_HEIGHT, data[1]), (int(height/2), height_ptr))
-    height_ptr += WIDGET_HEIGHT
-    image.paste(render_main(height-(MARGIN*2), MAIN_HEIGHT, data[2]), (MARGIN, height_ptr))
-    height_ptr += MAIN_HEIGHT
-    image.paste(render_photo(height-(MARGIN*2), WIDGET_HEIGHT, config.config_dir + '/image.jpg'), (MARGIN, height_ptr))
-    height_ptr += WIDGET_HEIGHT
+    width_ptr=0
+    image.paste(render_widget(int(height/2), WIDGET_HEIGHT, data[0]), (0, width_ptr))
+    image.paste(render_widget(int(height/2), WIDGET_HEIGHT, data[1]), (int(height/2), width_ptr))
+    width_ptr += WIDGET_HEIGHT
+    image.paste(render_main(height-(MARGIN*2), MAIN_HEIGHT, data[2]), (MARGIN, width_ptr))
+    width_ptr += MAIN_HEIGHT
+    image.paste(render_photo(height-(MARGIN*2), PHOTO_HEIGHT, config.config_dir + '/image.jpg'), (MARGIN, width_ptr))
+    width_ptr += PHOTO_HEIGHT
     image.paste(render_status_line(height, STATUS_HEIGHT), (0, width-STATUS_HEIGHT))
     return Image.new('1', (height, width), 255), image
